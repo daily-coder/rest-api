@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently --names typescript,express \"tsc -w\" \"nodemon ./dist/index.js\"",
+    "dev": "concurrently --names typescript,express \"tsc -w\" \"nodemon ./dist/app.js\"",
     "test": "jest --watch --verbose",
     "prepare": "husky install"
   },
