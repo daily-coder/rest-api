@@ -13,7 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
-    "mongoose": "^6.9.2"
+    "mongoose": "^6.9.2",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
