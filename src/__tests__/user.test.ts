@@ -1,10 +1,10 @@
 import supertest from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import createServer from "./utils/server";
+import createServer from "../utils/server";
 import { build } from "@jackfranklin/test-data-bot";
 import { faker } from "@faker-js/faker";
-import User from "./models/user";
+import User from "../models/user";
 
 const app = createServer();
 const request = supertest(app);
