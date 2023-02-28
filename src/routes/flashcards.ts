@@ -8,4 +8,9 @@ router.get("/", async (req, res) => {
   res.send(flashcards);
 });
 
+router.get("/:id", async (req, res) => {
+  const flashcard = await Flashcard.findById(req.params.id);
+  res.send(flashcard);
+});
+
 export default router;
