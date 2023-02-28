@@ -19,4 +19,9 @@ router.post("/", async (req, res) => {
   res.send({ message: "new flashcard created" });
 });
 
+router.delete("/:id", async (req, res) => {
+  await Flashcard.findByIdAndDelete(req.params.id);
+  res.send({ message: "flashcard deleted" });
+});
+
 export default router;
