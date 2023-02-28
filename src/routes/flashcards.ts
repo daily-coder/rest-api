@@ -13,4 +13,10 @@ router.get("/:id", async (req, res) => {
   res.send(flashcard);
 });
 
+router.post("/", async (req, res) => {
+  const newFlashcard = new Flashcard(req.body);
+  await newFlashcard.save();
+  res.send({ message: "new flashcard created" });
+});
+
 export default router;
