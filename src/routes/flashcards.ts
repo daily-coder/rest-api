@@ -19,6 +19,11 @@ router.post("/", async (req, res) => {
   res.send({ message: "new flashcard created" });
 });
 
+router.put("/:id", async (req, res) => {
+  await Flashcard.findByIdAndUpdate(req.params.id, req.body);
+  res.send({ message: "flashcard updated" });
+});
+
 router.delete("/:id", async (req, res) => {
   await Flashcard.findByIdAndDelete(req.params.id);
   res.send({ message: "flashcard deleted" });
