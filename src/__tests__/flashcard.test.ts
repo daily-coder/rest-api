@@ -40,26 +40,26 @@ async function setup() {
   const flashcardInfo = flashcardBuilder();
   const newFlashcard = new Flashcard(flashcardInfo);
   await newFlashcard.save();
-  return { flashcardInfo, newFlashcard };
+  // Note: don't use newFlashcard.toObject() as it doesn't convert _id: ObjectId
+  // into string
+  return JSON.parse(JSON.stringify(newFlashcard));
 }
 
 test("GET | return all flashcards from database", async () => {
-  const { flashcardInfo } = await setup();
+  const newFlashcard = await setup();
 
   const response = await request.get("/flashcards");
   expect(response.status).toBe(200);
   expect(response.body.length).toBeGreaterThan(0);
-  // newFlashcard contains additional methods like save, so don't use it to compare
-  // returned flashcard object in response.body
-  expect(response.body).toContainEqual(expect.objectContaining(flashcardInfo));
+  expect(response.body).toContainEqual(expect.objectContaining(newFlashcard));
 });
 
 test("GET | return a flashcard from database", async () => {
-  const { flashcardInfo, newFlashcard } = await setup();
+  const newFlashcard = await setup();
 
   const response = await request.get(`/flashcards/${newFlashcard._id}`);
   expect(response.status).toBe(200);
-  expect(response.body).toEqual(expect.objectContaining(flashcardInfo));
+  expect(response.body).toEqual(expect.objectContaining(newFlashcard));
 });
 
 test("POST | save a flashcard to database", async () => {
@@ -80,7 +80,7 @@ test("POST | save a flashcard to database", async () => {
 });
 
 test("PUT | update a flashcard from database", async () => {
-  const { flashcardInfo, newFlashcard } = await setup();
+  const newFlashcard = await setup();
   const updateInfo = flashcardBuilder();
 
   const response = await request
@@ -93,12 +93,12 @@ test("PUT | update a flashcard from database", async () => {
     `/flashcards/${newFlashcard._id}`
   );
   expect(flashcardResponse.body).not.toEqual(
-    expect.objectContaining(flashcardInfo)
+    expect.objectContaining(newFlashcard)
   );
 });
 
 test("DELETE | delete a flashcard from database", async () => {
-  const { flashcardInfo, newFlashcard } = await setup();
+  const newFlashcard = await setup();
 
   const response = await request.delete(`/flashcards/${newFlashcard._id}`);
   expect(response.status).toBe(200);
@@ -106,6 +106,6 @@ test("DELETE | delete a flashcard from database", async () => {
 
   const flashcardsResponse = await request.get("/flashcards");
   expect(flashcardsResponse.body).not.toContainEqual(
-    expect.objectContaining(flashcardInfo)
+    expect.objectContaining(newFlashcard)
   );
 });
