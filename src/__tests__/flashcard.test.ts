@@ -2,7 +2,7 @@ import supertest from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import createServer from "../utils/server";
-import { build } from "@jackfranklin/test-data-bot";
+import { build, perBuild } from "@jackfranklin/test-data-bot";
 import { faker } from "@faker-js/faker";
 import Flashcard from "../models/flashcard";
 
@@ -11,8 +11,8 @@ const request = supertest(app);
 let mongoServer: MongoMemoryServer;
 const flashcardBuilder = build({
   fields: {
-    question: faker.lorem.paragraph(),
-    answer: faker.lorem.paragraph(),
+    question: perBuild(() => faker.lorem.paragraph()),
+    answer: perBuild(() => faker.lorem.paragraph()),
   },
 });
 
@@ -72,6 +72,27 @@ test("POST | save a flashcard to database", async () => {
   expect(flashcardsResponse.status).toBe(200);
   expect(flashcardsResponse.body.length).toBeGreaterThan(0);
   expect(flashcardsResponse.body).toContainEqual(
+    expect.objectContaining(flashcardInfo)
+  );
+});
+
+test("PUT | update a flashcard from database", async () => {
+  const flashcardInfo = flashcardBuilder();
+  const newFlashcard = new Flashcard(flashcardInfo);
+  await newFlashcard.save();
+  const updateInfo = flashcardBuilder();
+
+  const response = await request
+    .put(`/flashcards/${newFlashcard._id}`)
+    .send(`question=${updateInfo.question}&answer=${updateInfo.answer}`);
+  expect(response.status).toBe(200);
+  expect(response.body.message).toMatchInlineSnapshot(`"flashcard updated"`);
+
+  const flashcardResponse = await request.get(
+    `/flashcards/${newFlashcard._id}`
+  );
+  expect(flashcardResponse.status).toBe(200);
+  expect(flashcardResponse.body).not.toEqual(
     expect.objectContaining(flashcardInfo)
   );
 });
