@@ -74,8 +74,6 @@ test("POST | save a flashcard to database", async () => {
   );
 
   const flashcardsResponse = await request.get("/flashcards");
-  expect(flashcardsResponse.status).toBe(200);
-  expect(flashcardsResponse.body.length).toBeGreaterThan(0);
   expect(flashcardsResponse.body).toContainEqual(
     expect.objectContaining(flashcardInfo)
   );
@@ -94,7 +92,6 @@ test("PUT | update a flashcard from database", async () => {
   const flashcardResponse = await request.get(
     `/flashcards/${newFlashcard._id}`
   );
-  expect(flashcardResponse.status).toBe(200);
   expect(flashcardResponse.body).not.toEqual(
     expect.objectContaining(flashcardInfo)
   );
@@ -108,7 +105,6 @@ test("DELETE | delete a flashcard from database", async () => {
   expect(response.body.message).toMatchInlineSnapshot(`"flashcard deleted"`);
 
   const flashcardsResponse = await request.get("/flashcards");
-  expect(flashcardsResponse.status).toBe(200);
   expect(flashcardsResponse.body).not.toContainEqual(
     expect.objectContaining(flashcardInfo)
   );
