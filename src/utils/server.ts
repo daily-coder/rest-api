@@ -5,7 +5,7 @@ import flashcardRoutes from "../routes/flashcards";
 
 function createServer() {
   const app = express();
-  app.use(morgan("common"));
+  app.use(morgan("dev"));
   app.use(express.urlencoded({ extended: true }));
   app.use("/users", userRoutes);
   app.use("/flashcards", flashcardRoutes);
