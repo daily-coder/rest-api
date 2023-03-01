@@ -18,6 +18,7 @@ const flashcardBuilder = build({
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
+  mongoose.set("strictQuery", false);
   await mongoose.connect(mongoServer.getUri());
 });
 
