@@ -36,10 +36,15 @@ afterAll(async () => {
   await mongoServer.stop();
 });
 
-test("GET | return all flashcards from database", async () => {
+async function setup() {
   const flashcardInfo = flashcardBuilder();
   const newFlashcard = new Flashcard(flashcardInfo);
   await newFlashcard.save();
+  return { flashcardInfo, newFlashcard };
+}
+
+test("GET | return all flashcards from database", async () => {
+  const { flashcardInfo } = await setup();
 
   const response = await request.get("/flashcards");
   expect(response.status).toBe(200);
@@ -50,9 +55,7 @@ test("GET | return all flashcards from database", async () => {
 });
 
 test("GET | return a flashcard from database", async () => {
-  const flashcardInfo = flashcardBuilder();
-  const newFlashcard = new Flashcard(flashcardInfo);
-  await newFlashcard.save();
+  const { flashcardInfo, newFlashcard } = await setup();
 
   const response = await request.get(`/flashcards/${newFlashcard._id}`);
   expect(response.status).toBe(200);
@@ -61,6 +64,7 @@ test("GET | return a flashcard from database", async () => {
 
 test("POST | save a flashcard to database", async () => {
   const flashcardInfo = flashcardBuilder();
+
   const response = await request
     .post(`/flashcards`)
     .send(`question=${flashcardInfo.question}&answer=${flashcardInfo.answer}`);
@@ -78,9 +82,7 @@ test("POST | save a flashcard to database", async () => {
 });
 
 test("PUT | update a flashcard from database", async () => {
-  const flashcardInfo = flashcardBuilder();
-  const newFlashcard = new Flashcard(flashcardInfo);
-  await newFlashcard.save();
+  const { flashcardInfo, newFlashcard } = await setup();
   const updateInfo = flashcardBuilder();
 
   const response = await request
@@ -99,9 +101,7 @@ test("PUT | update a flashcard from database", async () => {
 });
 
 test("DELETE | delete a flashcard from database", async () => {
-  const flashcardInfo = flashcardBuilder();
-  const newFlashcard = new Flashcard(flashcardInfo);
-  await newFlashcard.save();
+  const { flashcardInfo, newFlashcard } = await setup();
 
   const response = await request.delete(`/flashcards/${newFlashcard._id}`);
   expect(response.status).toBe(200);
