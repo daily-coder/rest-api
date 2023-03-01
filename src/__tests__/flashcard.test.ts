@@ -83,11 +83,11 @@ test("POST | save a flashcard to database", async () => {
 
 test("PUT | update a flashcard from database", async () => {
   const newFlashcard = await setup();
-  const updateInfo = flashcardBuilder();
+  const updateProps = flashcardBuilder();
 
   const response = await request
     .put(`/flashcards/${newFlashcard._id}`)
-    .send(`question=${updateInfo.question}&answer=${updateInfo.answer}`);
+    .send(`question=${updateProps.question}&answer=${updateProps.answer}`);
   expect(response.status).toBe(200);
   expect(response.body.message).toMatchInlineSnapshot(`"flashcard updated"`);
 
