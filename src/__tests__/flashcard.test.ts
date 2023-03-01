@@ -37,8 +37,8 @@ afterAll(async () => {
 });
 
 async function setup() {
-  const flashcardInfo = flashcardBuilder();
-  const newFlashcard = new Flashcard(flashcardInfo);
+  const flashcardProps = flashcardBuilder();
+  const newFlashcard = new Flashcard(flashcardProps);
   await newFlashcard.save();
   // Note: don't use newFlashcard.toObject() as it doesn't convert _id: ObjectId
   // into string
@@ -63,11 +63,13 @@ test("GET | return a flashcard from database", async () => {
 });
 
 test("POST | save a flashcard to database", async () => {
-  const flashcardInfo = flashcardBuilder();
+  const flashcardProps = flashcardBuilder();
 
   const response = await request
     .post(`/flashcards`)
-    .send(`question=${flashcardInfo.question}&answer=${flashcardInfo.answer}`);
+    .send(
+      `question=${flashcardProps.question}&answer=${flashcardProps.answer}`
+    );
   expect(response.status).toBe(200);
   expect(response.body.message).toMatchInlineSnapshot(
     `"new flashcard created"`
@@ -75,7 +77,7 @@ test("POST | save a flashcard to database", async () => {
 
   const flashcardsResponse = await request.get("/flashcards");
   expect(flashcardsResponse.body).toContainEqual(
-    expect.objectContaining(flashcardInfo)
+    expect.objectContaining(flashcardProps)
   );
 });
 
