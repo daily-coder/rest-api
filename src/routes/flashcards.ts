@@ -1,7 +1,17 @@
-import { Router } from "express";
+import { Request, Response, NextFunction, Router } from "express";
 import Flashcard from "../models/flashcard";
+import flashcardSchema from "../schemas/flashcard";
 
 const router = Router();
+
+function validateFlashcard(req: Request, res: Response, next: NextFunction) {
+  const { error } = flashcardSchema.validate(req.body);
+  if (error) {
+    const message = error.details.map((detail) => detail.message).join(",");
+    return res.status(400).send({ message });
+  }
+  next();
+}
 
 router.get("/", async (req, res) => {
   const flashcards = await Flashcard.find();
@@ -16,7 +26,7 @@ router.get("/:id", async (req, res) => {
   res.send(flashcard);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", validateFlashcard, async (req, res) => {
   const newFlashcard = new Flashcard(req.body);
   await newFlashcard.save();
   res.send({ message: "new flashcard created" });
