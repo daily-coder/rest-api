@@ -10,6 +10,9 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const flashcard = await Flashcard.findById(req.params.id);
+  if (!flashcard) {
+    return res.status(404).send({ message: `flashcard not found` });
+  }
   res.send(flashcard);
 });
 

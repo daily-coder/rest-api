@@ -81,9 +81,8 @@ test("DELETE | delete a flashcard from database", async () => {
   expect(status).toBe(200);
   expect(body.message).toMatchInlineSnapshot(`"flashcard deleted"`);
 
-  const flashcards = await request.get("/flashcards");
+  const flashcard = await request.get(`/flashcards/${newFlashcard._id}`);
 
-  expect(flashcards.body).not.toContainEqual(
-    expect.objectContaining(newFlashcard)
-  );
+  expect(flashcard.status).toBe(404);
+  expect(flashcard.body.message).toMatchInlineSnapshot(`"flashcard not found"`);
 });
