@@ -25,32 +25,30 @@ async function setup() {
 test("GET | return all flashcards from database", async () => {
   const newFlashcard = await setup();
 
-  const response = await request.get("/flashcards");
-  expect(response.status).toBe(200);
-  expect(response.body.length).toBeGreaterThan(0);
-  expect(response.body).toContainEqual(expect.objectContaining(newFlashcard));
+  const { status, body } = await request.get("/flashcards");
+  expect(status).toBe(200);
+  expect(body.length).toBeGreaterThan(0);
+  expect(body).toContainEqual(expect.objectContaining(newFlashcard));
 });
 
 test("GET | return a flashcard from database", async () => {
   const newFlashcard = await setup();
 
-  const response = await request.get(`/flashcards/${newFlashcard._id}`);
-  expect(response.status).toBe(200);
-  expect(response.body).toEqual(expect.objectContaining(newFlashcard));
+  const { status, body } = await request.get(`/flashcards/${newFlashcard._id}`);
+  expect(status).toBe(200);
+  expect(body).toEqual(expect.objectContaining(newFlashcard));
 });
 
 test("POST | save a flashcard to database", async () => {
   const flashcardProps = flashcardBuilder();
 
-  const response = await request
+  const { status, body } = await request
     .post(`/flashcards`)
     .send(
       `question=${flashcardProps.question}&answer=${flashcardProps.answer}`
     );
-  expect(response.status).toBe(200);
-  expect(response.body.message).toMatchInlineSnapshot(
-    `"new flashcard created"`
-  );
+  expect(status).toBe(200);
+  expect(body.message).toMatchInlineSnapshot(`"new flashcard created"`);
 
   const flashcardsResponse = await request.get("/flashcards");
   expect(flashcardsResponse.body).toContainEqual(
@@ -62,11 +60,11 @@ test("PUT | update a flashcard from database", async () => {
   const newFlashcard = await setup();
   const updateProps = flashcardBuilder();
 
-  const response = await request
+  const { status, body } = await request
     .put(`/flashcards/${newFlashcard._id}`)
     .send(`question=${updateProps.question}&answer=${updateProps.answer}`);
-  expect(response.status).toBe(200);
-  expect(response.body.message).toMatchInlineSnapshot(`"flashcard updated"`);
+  expect(status).toBe(200);
+  expect(body.message).toMatchInlineSnapshot(`"flashcard updated"`);
 
   const flashcardResponse = await request.get(
     `/flashcards/${newFlashcard._id}`
@@ -79,9 +77,11 @@ test("PUT | update a flashcard from database", async () => {
 test("DELETE | delete a flashcard from database", async () => {
   const newFlashcard = await setup();
 
-  const response = await request.delete(`/flashcards/${newFlashcard._id}`);
-  expect(response.status).toBe(200);
-  expect(response.body.message).toMatchInlineSnapshot(`"flashcard deleted"`);
+  const { status, body } = await request.delete(
+    `/flashcards/${newFlashcard._id}`
+  );
+  expect(status).toBe(200);
+  expect(body.message).toMatchInlineSnapshot(`"flashcard deleted"`);
 
   const flashcardsResponse = await request.get("/flashcards");
   expect(flashcardsResponse.body).not.toContainEqual(
