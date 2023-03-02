@@ -1,39 +1,17 @@
 import supertest from "supertest";
-import { MongoMemoryServer } from "mongodb-memory-server";
-import mongoose from "mongoose";
-import createServer from "../utils/server";
 import { build } from "@jackfranklin/test-data-bot";
 import { faker } from "@faker-js/faker";
+import createServer from "../utils/server";
 import User from "../models/user";
 
 const app = createServer();
 const request = supertest(app);
-let mongoServer: MongoMemoryServer;
 const userBuilder = build({
   fields: {
     username: faker.internet.userName(),
     email: faker.internet.email(),
     password: faker.internet.password(),
   },
-});
-
-beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  await mongoose.connect(mongoServer.getUri());
-});
-
-afterEach(async () => {
-  const collections = mongoose.connection.collections;
-  for (const key in collections) {
-    const collection = collections[key];
-    await collection.deleteMany({});
-  }
-});
-
-afterAll(async () => {
-  await mongoose.connection.dropDatabase();
-  await mongoose.connection.close();
-  await mongoServer.stop();
 });
 
 test("GET /users", async () => {

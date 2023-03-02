@@ -1,39 +1,16 @@
 import supertest from "supertest";
-import { MongoMemoryServer } from "mongodb-memory-server";
-import mongoose from "mongoose";
-import createServer from "../utils/server";
 import { build, perBuild } from "@jackfranklin/test-data-bot";
 import { faker } from "@faker-js/faker";
+import createServer from "../utils/server";
 import Flashcard from "../models/flashcard";
 
 const app = createServer();
 const request = supertest(app);
-let mongoServer: MongoMemoryServer;
 const flashcardBuilder = build({
   fields: {
     question: perBuild(() => faker.lorem.paragraph()),
     answer: perBuild(() => faker.lorem.paragraph()),
   },
-});
-
-beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  mongoose.set("strictQuery", false);
-  await mongoose.connect(mongoServer.getUri());
-});
-
-afterEach(async () => {
-  const collections = mongoose.connection.collections;
-  for (const key in collections) {
-    const collection = collections[key];
-    await collection.deleteMany({});
-  }
-});
-
-afterAll(async () => {
-  await mongoose.connection.dropDatabase();
-  await mongoose.connection.close();
-  await mongoServer.stop();
 });
 
 async function setup() {
