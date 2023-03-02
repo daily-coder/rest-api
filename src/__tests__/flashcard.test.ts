@@ -67,6 +67,16 @@ test("POST | return error message if question is skipped", async () => {
   expect(body.message).toMatchInlineSnapshot(`""question" is required"`);
 });
 
+test("POST | return error message if answer is skipped", async () => {
+  const flashcardProps = flashcardBuilder();
+  const { status, body } = await request
+    .post(`/flashcards`)
+    .send(`question=${flashcardProps.question}`);
+
+  expect(status).toBe(400);
+  expect(body.message).toMatchInlineSnapshot(`""answer" is required"`);
+});
+
 test("PUT | update a flashcard from database", async () => {
   const newFlashcard = await setup();
   const updateProps = flashcardBuilder();
