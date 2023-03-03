@@ -103,7 +103,7 @@ test("PUT | return error message if question is skipped", async () => {
   expect(body.message).toMatchInlineSnapshot(`""question" is required"`);
 });
 
-test("PUT | return error message if question is skipped", async () => {
+test("PUT | return error message if answer is skipped", async () => {
   const newFlashcard = await setup();
   const updateProps = flashcardBuilder();
   const { status, body } = await request
