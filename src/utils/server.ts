@@ -9,6 +9,9 @@ function createServer() {
   app.use(express.urlencoded({ extended: true }));
   app.use("/users", userRoutes);
   app.use("/flashcards", flashcardRoutes);
+  app.all("*", (req, res) => {
+    res.status(404).send({ message: "Not Found" });
+  });
   return app;
 }
 
