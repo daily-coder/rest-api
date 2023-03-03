@@ -32,7 +32,7 @@ router.post("/", validateFlashcard, async (req, res) => {
   res.send({ message: "new flashcard created" });
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", validateFlashcard, async (req, res) => {
   await Flashcard.findByIdAndUpdate(req.params.id, req.body);
   res.send({ message: "flashcard updated" });
 });

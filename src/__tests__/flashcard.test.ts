@@ -92,6 +92,17 @@ test("PUT | update a flashcard from database", async () => {
   expect(flashcard.body).not.toEqual(expect.objectContaining(newFlashcard));
 });
 
+test("PUT | return error message if question is skipped", async () => {
+  const newFlashcard = await setup();
+  const updateProps = flashcardBuilder();
+  const { status, body } = await request
+    .put(`/flashcards/${newFlashcard._id}`)
+    .send(`answer=${updateProps.answer}`);
+
+  expect(status).toBe(400);
+  expect(body.message).toMatchInlineSnapshot(`""question" is required"`);
+});
+
 test("DELETE | delete a flashcard from database", async () => {
   const newFlashcard = await setup();
   const { status, body } = await request.delete(
