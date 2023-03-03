@@ -1,17 +1,8 @@
-import { Request, Response, NextFunction, Router } from "express";
+import { Router } from "express";
 import * as flashcardController from "../controllers/flashcard";
-import flashcardSchema from "../schemas/flashcard";
+import validateFlashcard from "../middleware/validateFlashcard";
 
 const router = Router();
-
-function validateFlashcard(req: Request, res: Response, next: NextFunction) {
-  const { error } = flashcardSchema.validate(req.body);
-  if (error) {
-    const message = error.details.map((detail) => detail.message).join(",");
-    return res.status(400).send({ message });
-  }
-  next();
-}
 
 router
   .route("/")
