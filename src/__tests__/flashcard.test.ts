@@ -103,6 +103,17 @@ test("PUT | return error message if question is skipped", async () => {
   expect(body.message).toMatchInlineSnapshot(`""question" is required"`);
 });
 
+test("PUT | return error message if question is skipped", async () => {
+  const newFlashcard = await setup();
+  const updateProps = flashcardBuilder();
+  const { status, body } = await request
+    .put(`/flashcards/${newFlashcard._id}`)
+    .send(`question=${updateProps.question}`);
+
+  expect(status).toBe(400);
+  expect(body.message).toMatchInlineSnapshot(`""answer" is required"`);
+});
+
 test("DELETE | delete a flashcard from database", async () => {
   const newFlashcard = await setup();
   const { status, body } = await request.delete(
