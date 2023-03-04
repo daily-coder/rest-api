@@ -2,6 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import userRoutes from "../routes/users";
 import flashcardRoutes from "../routes/flashcards";
+import errorHandler from "../middleware/errorHandler";
 
 function createServer() {
   const app = express();
@@ -12,6 +13,7 @@ function createServer() {
   app.all("*", (req, res) => {
     res.status(404).send({ message: "Not Found" });
   });
+  app.use(errorHandler);
   return app;
 }
 
