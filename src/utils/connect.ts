@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import mongoose from "mongoose";
 
+mongoose.set("strictQuery", false);
+
 const port = process.env.MONGODB_URL || "mongodb://localhost:27017/demoApp";
 
 async function connect() {
