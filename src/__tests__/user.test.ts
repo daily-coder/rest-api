@@ -14,7 +14,7 @@ const userBuilder = build({
   },
 });
 
-test("POSt | register new user", async () => {
+test("POST | register new user", async () => {
   const { username, email, password } = userBuilder();
   const { status, body } = await request
     .post("/register")
