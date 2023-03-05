@@ -17,7 +17,7 @@ router.post("/register", async (req, res, next) => {
       if (error) {
         next(error);
       } else {
-        res.send({ message: `successfully registered user: ${username}` });
+        res.send({ message: "successfully registered user" });
       }
     });
   } catch (error) {
