@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 dotenv.config();
-import "express-async-errors";
 import connect from "./utils/connect";
 import createServer from "./utils/server";
 
