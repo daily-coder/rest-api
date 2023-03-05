@@ -13,3 +13,13 @@ const userBuilder = build({
     password: faker.internet.password(),
   },
 });
+
+test("POSt | register new user", async () => {
+  const { username, email, password } = userBuilder();
+  const { status, body } = await request
+    .post("/register")
+    .send(`username=${username}&email=${email}&password=${password}`);
+
+  expect(status).toBe(200);
+  expect(body.message).toMatchInlineSnapshot(`"successfully registered user"`);
+});
