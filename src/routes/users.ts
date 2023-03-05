@@ -1,49 +1,19 @@
 import { Router } from "express";
 import passport from "passport";
-import User from "../models/user";
+import * as userController from "../controllers/user";
 
 const router = Router();
 
-function getErrorMessage(error: unknown) {
-  if (error instanceof Error) return error.message;
-  else return String(error);
-}
-
-router.post("/register", async (req, res, next) => {
-  try {
-    const { username, email, password } = req.body;
-    const user = new User({ username, email });
-    const registeredUser = await User.register(user, password);
-    req.logIn(registeredUser, (error) => {
-      if (error) {
-        next(error);
-      } else {
-        res.send({ message: "successfully registered user" });
-      }
-    });
-  } catch (error) {
-    res.status(404).send({ message: getErrorMessage(error) });
-  }
-});
+router.post("/register", userController.register);
 
 router.post(
   "/login",
   passport.authenticate("local", {
     failureRedirect: "/login",
   }),
-  (req, res) => {
-    res.send({ message: "welcome back" });
-  }
+  userController.login
 );
 
-router.get("/logout", (req, res, next) => {
-  req.logout((error) => {
-    if (error) {
-      next(error);
-    } else {
-      res.send("successfully logged out");
-    }
-  });
-});
+router.get("/logout", userController.logout);
 
 export default router;
