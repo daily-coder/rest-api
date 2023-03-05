@@ -36,4 +36,14 @@ router.post(
   }
 );
 
+router.get("/logout", (req, res, next) => {
+  req.logout((error) => {
+    if (error) {
+      next(error);
+    } else {
+      res.send("successfully logged out");
+    }
+  });
+});
+
 export default router;
