@@ -1,4 +1,5 @@
 import { Router } from "express";
+import passport from "passport";
 import User from "../models/user";
 
 const router = Router();
@@ -24,5 +25,15 @@ router.post("/register", async (req, res, next) => {
     res.status(404).send({ message: getErrorMessage(error) });
   }
 });
+
+router.post(
+  "/login",
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+  }),
+  (req, res) => {
+    res.send({ message: "welcome back" });
+  }
+);
 
 export default router;
