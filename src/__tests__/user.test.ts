@@ -23,3 +23,17 @@ test("POSt | register new user", async () => {
   expect(status).toBe(200);
   expect(body.message).toMatchInlineSnapshot(`"successfully registered user"`);
 });
+
+test("POST | login user", async () => {
+  const { username, email, password } = userBuilder();
+  await request
+    .post("/register")
+    .send(`username=${username}&email=${email}&password=${password}`);
+
+  const { status, body } = await request
+    .post("/login")
+    .send(`username=${username}&password=${password}`);
+
+  expect(status).toBe(200);
+  expect(body.message).toMatchInlineSnapshot(`"welcome back"`);
+});
